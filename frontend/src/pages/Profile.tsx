@@ -20,7 +20,7 @@ import {
   DialogTitle,
 } from '@mui/material';
 import { Edit as EditIcon, Save as SaveIcon, Lock as LockIcon } from '@mui/icons-material';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../hooks/useAuth';
 import userService from '../services/user.service';
 
 const Profile: React.FC = () => {

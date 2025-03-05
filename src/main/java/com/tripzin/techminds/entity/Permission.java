@@ -1,14 +1,17 @@
 package com.tripzin.techminds.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "permissions")
-@Data
+@Getter
+@Setter
+@ToString(exclude = "roles")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,4 +25,21 @@ public class Permission {
     private String name;
     
     private String description;
+    
+    @Builder.Default
+    @ManyToMany(mappedBy = "permissions")
+    private Set<Role> roles = new HashSet<>();
+    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Permission that = (Permission) o;
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name);
+    }
 }

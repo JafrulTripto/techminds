@@ -1,6 +1,7 @@
 import api from './api';
 import { User } from '../types';
 import { ApiResponse } from '../types';
+import { MessageResponse } from '../types';
 
 export const userService = {
   getCurrentUser: async () => {
@@ -12,7 +13,7 @@ export const userService = {
   },
   
   getAllUsers: async () => {
-    return api.get<ApiResponse<User[]>>('/users');
+    return api.get<User[]>('/users');
   },
   
   updateUser: async (id: number, userData: Partial<User>) => {
@@ -29,6 +30,13 @@ export const userService = {
   
   verifyAccount: async (id: number) => {
     return api.post<ApiResponse<void>>(`/users/${id}/verify`);
+  },
+  
+  changePassword: async (currentPassword: string, newPassword: string) => {
+    return api.post<MessageResponse>('/users/change-password', {
+      currentPassword,
+      newPassword
+    });
   }
 };
 

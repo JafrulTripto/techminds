@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../hooks/useAuth';
 import { CircularProgress, Box } from '@mui/material';
 
 interface ProtectedRouteProps {
@@ -44,7 +44,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   if (
     requireAdmin &&
     (!authState.user ||
-      !authState.user.roles.some(role => role.name === 'ROLE_ADMIN'))
+      !authState.user.roles.some((role: string) => role === 'ROLE_ADMIN'))
   ) {
     return <Navigate to="/unauthorized" replace />;
   }

@@ -22,7 +22,7 @@ import {
   Email as EmailIcon,
   VerifiedUser as VerifiedUserIcon,
 } from '@mui/icons-material';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../hooks/useAuth';
 
 const Dashboard: React.FC = () => {
   const { authState } = useAuth();

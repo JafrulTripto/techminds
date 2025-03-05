@@ -1,20 +1,20 @@
 package com.tripzin.techminds.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Table(name = "work_orders")
-@Data
+@Getter
+@Setter
+@ToString(exclude = "user")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -66,6 +66,20 @@ public class WorkOrder {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        WorkOrder workOrder = (WorkOrder) o;
+        return Objects.equals(id, workOrder.id) && 
+               Objects.equals(woNumber, workOrder.woNumber);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, woNumber);
+    }
     
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)

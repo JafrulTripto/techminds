@@ -40,7 +40,7 @@ class AuthService {
    * Refresh access token using refresh token
    */
   async refreshToken(request: TokenRefreshRequest): Promise<TokenRefreshResponse> {
-    const response = await api.post<TokenRefreshResponse>('/auth/refreshtoken', request);
+    const response = await api.post<TokenRefreshResponse>('/auth/refresh-token', request);
     return response.data;
   }
 

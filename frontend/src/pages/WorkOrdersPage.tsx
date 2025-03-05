@@ -8,7 +8,7 @@ import { workOrderService } from '../services/workOrder.service';
 import { userService } from '../services/user.service';
 import { WorkOrder, WorkOrderStats as Stats, WorkOrderFilter, WorkOrderRequest } from '../types/workOrder';
 import { User } from '../types';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../hooks/useAuth';
 
 const WorkOrdersPage: React.FC = () => {
   const { authState } = useAuth();
@@ -81,9 +81,10 @@ const WorkOrdersPage: React.FC = () => {
     
     try {
       const response = await userService.getAllUsers();
+      console.log('Users response:', response);
       setState(prev => ({
         ...prev,
-        users: response.data.data
+        users: Array.isArray(response.data) ? response.data : []
       }));
     } catch (err: any) {
       console.error('Failed to load users:', err);

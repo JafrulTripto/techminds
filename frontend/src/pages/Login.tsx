@@ -13,9 +13,10 @@ import {
   Container,
   Paper,
   Alert,
+  Stack,
 } from '@mui/material';
-import { LockOutlined as LockOutlinedIcon } from '@mui/icons-material';
-import { useAuth } from '../contexts/AuthContext';
+import { LockOutlined as LockOutlinedIcon, Psychology as PsychologyIcon } from '@mui/icons-material';
+import { useAuth } from '../hooks/useAuth';
 
 const Login: React.FC = () => {
   const { login, authState } = useAuth();
@@ -55,6 +56,7 @@ const Login: React.FC = () => {
     <Container component="main" maxWidth="xs">
       <Paper
         elevation={3}
+        className="techminds-card"
         sx={{
           mt: 8,
           p: 4,
@@ -62,13 +64,46 @@ const Login: React.FC = () => {
           flexDirection: 'column',
           alignItems: 'center',
           borderRadius: 2,
+          borderTop: '4px solid #1976d2',
+          borderBottom: '4px solid #9c27b0',
         }}
       >
-        <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign in
+        <Box 
+          className="techminds-logo-container"
+          sx={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            alignItems: 'center',
+            mb: 3
+          }}
+        >
+          <Avatar 
+            sx={{ 
+              m: 1, 
+              bgcolor: 'primary.main',
+              width: 56,
+              height: 56
+            }}
+          >
+            <PsychologyIcon fontSize="large" />
+          </Avatar>
+          <Typography 
+            component="h1" 
+            variant="h4"
+            className="techminds-gradient-text"
+            sx={{ 
+              fontWeight: 'bold'
+            }}
+          >
+            TechMinds
+          </Typography>
+          <Typography variant="subtitle1" color="text.secondary" align="center">
+            Empowering Technical Excellence
+          </Typography>
+        </Box>
+        
+        <Typography component="h2" variant="h5" sx={{ mb: 2 }}>
+          Sign in to your account
         </Typography>
         
         {(error || authState.error) && (
@@ -120,7 +155,14 @@ const Login: React.FC = () => {
             type="submit"
             fullWidth
             variant="contained"
-            sx={{ mt: 3, mb: 2 }}
+            sx={{ 
+              mt: 3, 
+              mb: 2,
+              background: 'linear-gradient(45deg, #1976d2 30%, #9c27b0 90%)',
+              '&:hover': {
+                background: 'linear-gradient(45deg, #1565c0 30%, #7b1fa2 90%)',
+              }
+            }}
             disabled={isSubmitting}
           >
             {isSubmitting ? 'Signing in...' : 'Sign In'}

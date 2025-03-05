@@ -16,10 +16,10 @@ import {
   Typography,
   Button,
   useMediaQuery,
-  useTheme,
   Avatar,
   Menu,
   MenuItem,
+  Tooltip,
 } from '@mui/material';
 import {
   Menu as MenuIcon,
@@ -29,16 +29,20 @@ import {
   ExitToApp as LogoutIcon,
   AccountCircle as AccountIcon,
   Assignment as AssignmentIcon,
+  Brightness4 as DarkModeIcon,
+  Brightness7 as LightModeIcon,
+  Settings as SettingsIcon,
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../hooks/useAuth';
+import { useTheme } from '../hooks/useTheme';
 
 const drawerWidth = 240;
 
 const MainLayout: React.FC = () => {
   const { authState, logout } = useAuth();
+  const { theme, mode, toggleTheme } = useTheme();
   const navigate = useNavigate();
-  const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -69,7 +73,7 @@ const MainLayout: React.FC = () => {
     }
   };
   
-  const isAdmin = authState.user?.roles.some(role => role === 'ROLE_ADMIN');
+  const isAdmin = authState.user?.roles.some((role: string) => role === 'ROLE_ADMIN');
   
   const drawer = (
     <div>
@@ -105,14 +109,24 @@ const MainLayout: React.FC = () => {
           </ListItemButton>
         </ListItem>
         {isAdmin && (
-          <ListItem disablePadding>
-            <ListItemButton onClick={() => handleNavigate('/admin/users')}>
-              <ListItemIcon>
-                <PeopleIcon />
-              </ListItemIcon>
-              <ListItemText primary="User Management" />
-            </ListItemButton>
-          </ListItem>
+          <>
+            <ListItem disablePadding>
+              <ListItemButton onClick={() => handleNavigate('/admin/users')}>
+                <ListItemIcon>
+                  <PeopleIcon />
+                </ListItemIcon>
+                <ListItemText primary="User Management" />
+              </ListItemButton>
+            </ListItem>
+            <ListItem disablePadding>
+              <ListItemButton onClick={() => handleNavigate('/admin/settings')}>
+                <ListItemIcon>
+                  <SettingsIcon />
+                </ListItemIcon>
+                <ListItemText primary="Settings" />
+              </ListItemButton>
+            </ListItem>
+          </>
         )}
       </List>
     </div>
@@ -142,7 +156,16 @@ const MainLayout: React.FC = () => {
             TechMinds
           </Typography>
           {authState.isAuthenticated ? (
-            <div>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Tooltip title={mode === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}>
+                <IconButton
+                  color="inherit"
+                  onClick={toggleTheme}
+                  sx={{ mr: 1 }}
+                >
+                  {mode === 'light' ? <DarkModeIcon /> : <LightModeIcon />}
+                </IconButton>
+              </Tooltip>
               <IconButton
                 size="large"
                 edge="end"
@@ -187,7 +210,7 @@ const MainLayout: React.FC = () => {
                   Logout
                 </MenuItem>
               </Menu>
-            </div>
+            </Box>
           ) : (
             <div>
               <Button color="inherit" onClick={() => navigate('/login')}>

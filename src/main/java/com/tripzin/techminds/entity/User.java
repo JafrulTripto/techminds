@@ -4,15 +4,13 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -21,7 +19,9 @@ import java.util.Set;
            @UniqueConstraint(columnNames = "email"),
            @UniqueConstraint(columnNames = "phone")
        })
-@Data
+@Getter
+@Setter
+@ToString(exclude = "roles")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -66,6 +66,21 @@ public class User {
                joinColumns = @JoinColumn(name = "user_id"),
                inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
+    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id) && 
+               Objects.equals(email, user.email) && 
+               Objects.equals(phone, user.phone);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, email, phone);
+    }
     
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)

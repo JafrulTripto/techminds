@@ -1,20 +1,20 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useState, useEffect, ReactNode } from 'react';
 import { AuthState } from '../types';
 import authService from '../services/auth.service';
 import userService from '../services/user.service';
 import axios from 'axios';
 
 // Define the context type
-interface AuthContextType {
+export interface AuthContextType {
   authState: AuthState;
   login: (username: string, password: string) => Promise<void>;
-  register: (phone: string, email: string, password: string, firstName: string, lastName: string) => Promise<void>;
+  register: (phone: string, email: string, password: string, firstName: string, lastName?: string) => Promise<void>;
   logout: () => void;
   loadUser: () => Promise<void>;
 }
 
 // Create the context with a default value
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // Initial auth state
 const initialAuthState: AuthState = {
@@ -111,7 +111,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   // Register user
-  const register = async (phone: string, email: string, password: string, firstName: string, lastName: string): Promise<void> => {
+  const register = async (phone: string, email: string, password: string, firstName: string, lastName?: string): Promise<void> => {
     try {
       setAuthState(prev => ({ ...prev, loading: true, error: null }));
       await authService.register({ phone, email, password, firstName, lastName });
@@ -150,13 +150,4 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       {children}
     </AuthContext.Provider>
   );
-};
-
-// Custom hook to use the auth context
-export const useAuth = (): AuthContextType => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
 };
